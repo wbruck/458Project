@@ -11,3 +11,5 @@ no
 
 
 successor functions will loop throug list of arrays, of possitions
+
+set-difference will return the intersection of 2 lists 
