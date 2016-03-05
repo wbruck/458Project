@@ -152,7 +152,37 @@
 ;;
 ;
 ;Seems more efficient to do this in the initial function but I couldnt figure it out
+;;
+;defined these in a file that the function loads to "refresh" them every time
+;(defparameter *list-of-centers* '())
+;(defparameter *list-of-right-wings* '())
+;(defparameter *list-of-left-wings* '())
+;(defparameter *list-of-goalies* '())
+; (defparameter *list-of-defensemen* '())
 
+;player-class-list is output of csv-into-loist-of-player-classes
+; TODO - can probably add that into the function proper to make it easier
+(defun sort-player-classes-into-list-by-position (file-input)
+  (let ((player-class-list (csv-into-list-of-player-classes file-input)))
+  (load "C:/458Project/defPlayerLists.lisp")
+  (loop
+    for player in player-class-list
+    do (cond
+        ((equal (player-position player) "C")
+         (setf *list-of-centers*
+           (cons player *list-of-centers*)))
+        ((equal (player-position player) "LW")
+         (setf *list-of-left-wings*
+           (cons player *list-of-left-wings*)))
+        ((equal (player-position player) "RW")
+         (setf *list-of-right-wings*
+           (cons player *list-of-right-wings*)))
+        ((equal (player-position player) "D")
+         (setf *list-of-defensemen*
+           (cons player *list-of-defensemen*)))
+        ((equal (player-position player) "G")
+         (setf *list-of-goalies*
+           (cons player *list-of-goalies*)))))))
       
 ; string-to-number
 
