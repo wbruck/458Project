@@ -1,0 +1,9 @@
+questions for Mr. Peabody
+
+1.  I cant hang my functions together elegantly. EX. csv-into-player-class
+is it because I am trying to define variables incorrectly in the loop?
+conversly, if I pass a function to (cons (FUNCTION) list) it throws and illeagal argument
+
+2. Read in file garbage hacks seem, well, like hacks...
+
+3. 

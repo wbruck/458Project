@@ -33,6 +33,12 @@
    (position :accessor player-position
              :initform 'x
              :initarg :position)))
+
+;;; print player class ; from textbook
+(defmethod print-object ((object player) stream)
+  (format stream "#<PLAYER ~A (POSITION: ~A)>"
+    (player-name object)
+    (player-position object)))
   
 ;
 ;;
@@ -49,10 +55,12 @@
                 (SETQ LINE (READ-LINE STREAM NIL :EOF))))
 
 ;;; function to do same
-(defun read-all-lines (input-stream)
+(defun read-all-lines (input-file)
+  (with-open-file (stream input-file 
+                          :direction :input)
   (DO ((LINE NIL) (RESULT NIL (CONS LINE RESULT)))   ; var init step
                   ((EQ LINE :EOF) (NREVERSE RESULT)) ; end-test result
-    (SETQ LINE (READ-LINE STREAM NIL :EOF))))        ; statement
+    (SETQ LINE (READ-LINE STREAM NIL :EOF)))))        ; statement
 
 ;
 ;;
@@ -71,9 +79,9 @@
                                                                      ; trimming +1 to lose ,
 ;;;;;;notes on sting parsing
 ;;find position
-(position #\, line :test #'equal)
+;(position #\, line :test #'equal)
 ;;trim until position
-(subseq line 0 position)
+;(subseq line 0 position)
 
 ;
 ;;
@@ -94,11 +102,62 @@
              ((= i 6) (setf (player-salary sam) item)))) ; TOD use string-to-number
     sam))
 
+;
+;;
+;;;
+;;;; Whole function to parse csv into classes
+;;;
+;;
+;
+; preliminary function to put all stats into list of lists
+(defun csv-into-player-lists (input-file)
+  (let* ((lines (reverse (cdr (reverse                ; hack to get rid of :EOF garbage
+                      (cdr (read-all-lines input-file)))))))
+    (loop
+      with add-player-list = ()
+      for line in lines
+      do (setf add-player-list (cons (split-string-comma line) add-player-list))
+      finally (return add-player-list))))
 
-string-to-number
+;copy of prelim, with all stats into class
+;;
+;;; DOES NOT WORK, but I think it would be faster
+;;
+(defun csv-into-player-class (input-file)
+  (let* ((lines (reverse (cdr (reverse                ; hack to get rid of :EOF garbage
+                      (cdr (read-all-lines input-file)))))))
+    (loop
+      with add-player-class-list = ()
+      for line in lines
+      do ((setf add-player (split-string-comma line))
+          (setf add-player-class-list (cons 
+                                       (list-into-player-class add-player)
+                                       add-player-class-list))
+          finally (return add-player-class-list)))))
+
+; read in csv and put players into player classes
+(defun csv-into-list-of-player-classes (file-input)
+  (LOOP
+    WITH PLAYER-CLASSES = NIL 
+    FOR LIST IN (CSV-INTO-PLAYER-LISTS FILE-INPUT)
+    DO (setf player-classes (CONS (LIST-INTO-PLAYER-CLASS LIST)
+                                  PLAYER-CLASSES))
+    FINALLY (RETURN PLAYER-CLASSES)))
+
+;
+;;
+;;;
+;;;; SORT Player Classes into position lists
+;;;
+;;
+;
+;Seems more efficient to do this in the initial function but I couldnt figure it out
+
+      
+; string-to-number
 
 
- (loop with players = ()
-                for line in read-in
-                    do (cons (list-into-player-class (split-string-comma (line))) players)
-                    players)
+ ;(loop with players = ()
+  ;              for line in read-in
+   ;                 do (cons (list-into-player-class (split-string-comma (line))) players)
+    ;                players)
