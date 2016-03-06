@@ -54,9 +54,85 @@ no
   pop player from array
   ;do some calculation
   (cond 
-  recursive-dfs (next-array)
+  recursive-dfs (next-array))
      
-     ;
+    
+;
+;;
+;;;
+;;;; copy lists into new lists to work with
+;;;
+;;
+;
+(defparameter *list-of-position-lists* '())
+
+(defun copy-into-list-of-lists ()
+  (defparameter *list-of-position-lists* '())
+  (setq right-wings1 (copy-list *list-of-right-wings*))
+  (setq *list-of-position-lists* (cons right-wings1 *list-of-position-lists*))
+  (setq left-wings1 (copy-list *list-of-left-wings*))
+  (setq *list-of-position-lists* (cons left-wings1 *list-of-position-lists*))
+  (setq goalies (copy-list *list-of-goalies*))
+  (setq *list-of-position-lists* (cons goalies *list-of-position-lists*))
+  )
    
 
-set-difference will return the intersection of 2 lists 
+;
+;;
+;;;
+;;;; RECURSIVELY GO THROUGH LISTS
+;;;
+;;
+;
+(defun search-for-lineup (list-of-all-positions lineup)
+  (let ((player (pop (car list-of-all-positions))))
+    ; (print player)
+    (setq lineup (cons player lineup))
+    (print (calculate-salary lineup))
+    (cond ; call recursively DFS
+     ((> (calculate-salary lineup) 20000) ; salary too high
+      (if (null (car (car list-of-all-positions))) ; check position list length !0
+        lineup ; return lineup
+        (search-for-lineup list-of-all-positions ; same position list
+                         (cdr lineup)))) ; remove last player from lineup
+     ((eq (length (cdr list-of-all-positions)) 0) lineup) ; terminator
+      (t (search-for-lineup (cdr list-of-all-positions) lineup)); position lists iteration
+      )
+     )) ; position lists
+
+;;;;;PROBLEMS 
+; 1. lists get consumed, making second runs, impossible
+; 2. calling recursive "back" to the previous list of players not possible
+; 3. 
+  
+;
+;;
+;;;
+;;;; CALCUALTE SALARY AND SCORE
+;;;
+;;
+;
+(defun calculate-salary (lineup)
+  (loop with salary = 0
+      for player in lineup
+      do (incf salary (player-salary player))
+      finally (return salary)))
+
+;score
+(defun calculate-score (lineup)
+  (loop with score = 0
+      for player in lineup
+      do (incf score (player-score player))
+        finally (return score)))
+
+
+;;;; Execute lines to save typing
+(copy-into-list-of-lists)
+(setq lineup1 (search-for-lineup *list-of-position-lists* '()))
+(calculate-salary lineup1)
+(calculate-score lineup1)
+
+
+
+(defparameter *lineup* '())
+; set-difference will return the intersection of 2 lists  

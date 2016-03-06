@@ -98,8 +98,8 @@
              ((= i 2) (setf (player-name sam) item))
              ((= i 3) (setf (player-name sam) 
                         (concatenate 'string (player-name sam) item)))
-             ((= i 4) (setf (player-score sam) item)) ; TODO use string-to-number
-             ((= i 6) (setf (player-salary sam) item)))) ; TOD use string-to-number
+             ((= i 4) (setf (player-score sam) (read-from-string item)))
+             ((= i 6) (setf (player-salary sam) (parse-integer item)))))
     sam))
 
 ;
@@ -183,8 +183,7 @@
         ((equal (player-position player) "G")
          (setf *list-of-goalies*
            (cons player *list-of-goalies*)))))))
-      
-; string-to-number
+
 
 
  ;(loop with players = ()
