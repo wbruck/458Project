@@ -65,16 +65,20 @@
 ;;;; RECURSIVELY GO THROUGH LISTS WITH ARRAYS!!
 ;;;
 ;;
-;
+; position should just be length of lineup-1
 (defun search-for-lineup-a (position-x player-x lineup)
   (declare (notinline search-for-lineup));to make trace work
   (let* ((position (aref *position-array* position-x))
          (player (aref position player-x)))
     (print player)
     (setq lineup (cons player lineup))
-    (print (calculate-salary lineup))
     (print lineup)
-    (cond ; call recursively DFS
+    (print (calculate-salary lineup))
+    (print (calculate-score lineup))
+    ;put whole cond in if to check if best score
+    ; use loop to go through each position array
+    ; use recursion to get up and down on array
+    (cond ; call recursively DFS      
      ((> (calculate-salary lineup) 20000) ; salary too high
       (if (> (1+ player-x) (length position)) ; check next call player lenght 
         lineup ; return lineup TODO ->(really move up position)
@@ -82,11 +86,33 @@
          position-x ; same position list
          (1+ player-x) ; next player
          (cdr lineup)))) ; remove last player from lineup
-     ((> (1+ position-x) 2) lineup) ; terminator if for complete LEGAL lineup
+     ((> (1+ position-x) 2) ; terminator if for complete LEGAL lineup
+      ; check if a finished lineup has best score
+      (if (> (calculate-score lineup) *best-score*)
+          lineup ; return lineup
+        "not best score"))
      (t (search-for-lineup-a 
          (1+ position-x) ; next position
          0 ; first player in array
        lineup ))))) ; TODO - append lineup to LEGAL list start over
 
-
+(defun loop-recursive (position-x lineup)
+  (declare (notinline loop-recursive))
+  (let* ((position (aref *position-array* position-x)))
+    (loop
+      for player across position
+      do(
+         (setq lineup (cons player lineup))
+         (cond
+          ((> (1+ position-x) 2)
+           lineup)
+          ((< (calculate-salary lineup) 20000)
+           (loop-recursive (1+ position-x) lineup))
+          ((> (calculate-salary lineup) 20000)
+           (cdr lineup)))
+         (print (calculate-score lineup))))
+      lineup))
+         
+(defparameter *best-score* 40)
+(loop-recursive 0 '())
 (SEARCH-FOR-LINEUP-A 0 0 'NIL)
