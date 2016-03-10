@@ -123,17 +123,17 @@
 ;;
 ;;; DOES NOT WORK, but I think it would be faster
 ;;
-(defun csv-into-player-class (input-file)
-  (let* ((lines (reverse (cdr (reverse                ; hack to get rid of :EOF garbage
-                      (cdr (read-all-lines input-file)))))))
-    (loop
-      with add-player-class-list = ()
-      for line in lines
-      do ((setf add-player (split-string-comma line))
-          (setf add-player-class-list (cons 
-                                       (list-into-player-class add-player)
-                                       add-player-class-list))
-          finally (return add-player-class-list)))))
+;(defun csv-into-player-class (input-file)
+;  (let* ((lines (reverse (cdr (reverse                ; hack to get rid of :EOF garbage
+;                      (cdr (read-all-lines input-file)))))))
+;    (loop
+;      with add-player-class-list = ()
+;      for line in lines
+;      do ((setf add-player (split-string-comma line))
+;          (setf add-player-class-list (cons 
+;                                       (list-into-player-class add-player)
+;                                       add-player-class-list))
+;          finally (return add-player-class-list)))))
 
 ; read in csv and put players into player classes
 (defun csv-into-list-of-player-classes (file-input)
@@ -184,8 +184,10 @@
          (setf *list-of-goalies*
            (cons player *list-of-goalies*)))))))
 
+(setq file-in "C:/458Project/smallplayers.csv")
 
-
+(sort-player-classes-into-list-by-position file-in)
+;(sort-player-classes-into-list-by-position
  ;(loop with players = ()
   ;              for line in read-in
    ;                 do (cons (list-into-player-class (split-string-comma (line))) players)
