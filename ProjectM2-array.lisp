@@ -101,18 +101,40 @@
   (let* ((position (aref *position-array* position-x)))
     (loop
       for player across position
-      do(
-         (setq lineup (cons player lineup))
+      do (setf lineup (cons player lineup))
+      (print player)
+;      (print lineup)
+      (print (calculate-salary lineup))
          (cond
-          ((> (1+ position-x) 2)
-           lineup)
-          ((< (calculate-salary lineup) 20000)
-           (loop-recursive (1+ position-x) lineup))
-          ((> (calculate-salary lineup) 20000)
-           (cdr lineup)))
-         (print (calculate-score lineup))))
-      lineup))
-         
-(defparameter *best-score* 40)
+          ((> (1+ position-x) 2) ; TERMINATOR done with all positions
+           (if (and (> (calculate-score lineup) *best-score*) ; check score
+                    (< (calculate-salary lineup) *max-salary*))
+               ; if best: append lineup, set best, cdr lineup, loop
+               (progn (print "LEGAL LINEUP!!!!")
+                 (setf *legal-lineup* (cons lineup *legal-lineup*))
+                 (setf *best-score* (calculate-score lineup))
+                 (setf lineup (cdr lineup))
+                 lineup ) ; return lineup from the progn
+              ;else remove player from list
+             (setf lineup (cdr lineup))))
+          ((< (calculate-salary lineup) *max-salary*) ; salary < max
+           (loop-recursive (1+ position-x) lineup) ; go recursively to next position
+           (setf lineup (cdr lineup))) ; remove player to loop to next
+          ((> (calculate-salary lineup) *max-salary*) ; loop to next player
+           (setf lineup (cdr lineup))
+           ) ; remove player added before going to next
+      (t (print "it worked"))) ; truth cond... do nothing
+      (print lineup)
+      (print (calculate-score lineup)))
+    (print "out of loop")
+      lineup)) ; return lineup
+    
+    
+;;; TODO - add check score/append to not only find local max
+(defparameter *max-salary* 21000)
+(defparameter *best-score* 0)
+(defparameter *legal-lineup* '())
 (loop-recursive 0 '())
 (SEARCH-FOR-LINEUP-A 0 0 'NIL)
+
+
