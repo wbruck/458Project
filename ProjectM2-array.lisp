@@ -16,29 +16,6 @@
   (setf (aref *position-array* 2) *left-wing-array*)
   )
 
-;
-;;
-;;;
-;;;; RECURSIVELY GO THROUGH LISTS
-;;;
-;;
-;
-(defun search-for-lineup (list-of-all-positions lineup)
-  (declare (notinline search-for-lineup));to make trace work
-  (let ((player (pop (car list-of-all-positions))))
-    ; (print player)
-    (setq lineup (cons player lineup))
-    (print (calculate-salary lineup))
-    (cond ; call recursively DFS
-     ((> (calculate-salary lineup) 20000) ; salary too high
-      (if (null (car (car list-of-all-positions))) ; check position list length !0
-        lineup ; return lineup
-        (search-for-lineup list-of-all-positions ; same position list
-                         (cdr lineup)))) ; remove last player from lineup
-     ((eq (length (cdr list-of-all-positions)) 0) lineup) ; terminator
-      (t (search-for-lineup (cdr list-of-all-positions) lineup)); position lists iteration
-      )
-    )) ; position lists
 
 ;
 ;;
@@ -135,6 +112,6 @@
 (defparameter *best-score* 0)
 (defparameter *legal-lineup* '())
 (loop-recursive 0 '())
-(SEARCH-FOR-LINEUP-A 0 0 'NIL)
+;(SEARCH-FOR-LINEUP-A 0 0 'NIL) 
 
 
