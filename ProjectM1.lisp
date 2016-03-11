@@ -90,11 +90,14 @@
 ;;;
 ;;
 ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;FOR UNKNOWN REASONS the csv file has to have an empty row or it will 
+;;;; not parse the last column, i guess theres  a bug in my parser
 (defun list-into-player-class (list)
   (let ((sam (MAKE-INSTANCE 'PLAYER)))  ;make instance
     (LOOP FOR ITEM IN LIst ; items in list
-    FOR I upto 12     ; number of items "index"
-    do (cond ((= i 1) (setf (player-position sam) item))
+        FOR I upto 13     ; number of items "index"
+        do (cond ((= i 1) (setf (player-position sam) item))
              ((= i 2) (setf (player-name sam) item))
              ((= i 3) (setf (player-name sam) 
                         (concatenate 'string (player-name sam) item)))
@@ -185,8 +188,10 @@
            (cons player *list-of-goalies*)))))))
 
 (setq file-in "C:/458Project/smallplayers.csv")
+(setq file-2 "C:/458Project/big2-29.csv")
+(setq full-file "C:/458Project/NHL-2016-03-08-14899-players-list.csv")
 
-(sort-player-classes-into-list-by-position file-in)
+(sort-player-classes-into-list-by-position full-file)
 ;(sort-player-classes-into-list-by-position
  ;(loop with players = ()
   ;              for line in read-in

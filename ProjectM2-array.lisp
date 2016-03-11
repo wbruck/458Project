@@ -47,11 +47,11 @@
   (declare (notinline search-for-lineup));to make trace work
   (let* ((position (aref *position-array* position-x))
          (player (aref position player-x)))
-    (print player)
+   ; (print player)
     (setq lineup (cons player lineup))
-    (print lineup)
-    (print (calculate-salary lineup))
-    (print (calculate-score lineup))
+   ; (print lineup)
+   ; (print (calculate-salary lineup))
+   ; (print (calculate-score lineup))
     ;put whole cond in if to check if best score
     ; use loop to go through each position array
     ; use recursion to get up and down on array
@@ -79,9 +79,9 @@
     (loop
       for player across position
       do (setf lineup (cons player lineup))
-      (print player)
+;      (print player)
 ;      (print lineup)
-      (print (calculate-salary lineup))
+ ;     (print (calculate-salary lineup))
          (cond
           ((> (1+ position-x) 2) ; TERMINATOR done with all positions
            (if (and (> (calculate-score lineup) *best-score*) ; check score
@@ -101,13 +101,15 @@
            (setf lineup (cdr lineup))
            ) ; remove player added before going to next
       (t (print "it worked"))) ; truth cond... do nothing
-      (print lineup)
-      (print (calculate-score lineup)))
-    (print "out of loop")
+  ;    (print lineup)
+;       (print (calculate-score lineup)) 
+      )
+   ; (print "out of loop")
       lineup)) ; return lineup
     
     
 ;;; TODO - add check score/append to not only find local max
+(copy-into-arrays)
 (defparameter *max-salary* 21000)
 (defparameter *best-score* 0)
 (defparameter *legal-lineup* '())
