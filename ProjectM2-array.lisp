@@ -1,26 +1,23 @@
-;;; sort array
+;;; sort list
 (defun sort-list (list-of-players)
   (let* ((listx '())
          (sub-list (cdr list-of-players)))
     (setf listx (cons (car list-of-players) listx))
     (loop
       for x in sub-list
-      do (print (player-salary x))
-      (cond
+      do (cond
           ((> (player-salary x) (player-salary (car listx)))
            (setf listx (cons x listx)))
           ((equalp (player-salary x) (player-salary (car listx)))
-           (print "they are equal")
            (setf listx (cons x listx)))
-           ;find position in list to insert
-         ;  (progn
-         ;    (loop
-          ;     for x in sub-list
-       (t (print "try this")
-          ; loop through list until you find < next
-          (print (player-salary x))
-          (print listx)
-          (print (length listx))
+          ;find position in list to insert
+          ((< (player-salary x) (player-salary (car (last listx))))
+           (print "poop")
+           (setf listx (append listx (list x))))
+       (t ; loop through list until you find < next
+        ;  (print (player-salary x))
+        ;  (print listx)
+        ;  (print (length listx))
           (loop
             for y upto (length listx)
             ; find first salaryX > salaryY
@@ -29,10 +26,10 @@
             return (progn
                      (let ((num-less y)) 
                        ; (cons player (last sub-list num-less)
-                       (print num-less)
-                       (print (butlast listx num-less))
-                       (print "end")
-                       (print (cons x (last listx num-less)))
+                     ;  (print num-less)
+                     ;  (print (butlast listx num-less))
+                     ;  (print "end")
+                     ;  (print (cons x (last listx num-less)))
                        (setf listx (append (butlast listx num-less) 
                                            (cons x (last listx num-less))))))
        )
@@ -41,10 +38,11 @@
   listx))
   
 ;  find position its < append there
-(sort-list *list-of-right-wings*)
 
+(sort-list *list-of-left-wings*)
+(reverse *)
 (loop
-  for x in (sort-list *list-of-right-wings*)
+  for x in *
   do (print (player-salary x)))
         
 (setf *new-array* (make-array 0 
@@ -57,39 +55,47 @@
   (defparameter *position-array* (make-array 9))
   (setf *goalie-array* (make-array 
                         (length *list-of-goalies*)
-                        :initial-contents *list-of-goalies*))
+                        :initial-contents (reverse (sort-list *list-of-goalies*))))
   (setf (aref *position-array* 0) *goalie-array*)
   (setf *right-wing-array* (make-array
                             (length *list-of-right-wings*)
-                                    :initial-contents *list-of-right-wings*))
+                            :initial-contents (reverse 
+                                               (sort-list *list-of-right-wings*))))
   (setf (aref *position-array* 1) *right-wing-array*)
   (setf *left-wing-array* (make-array 
                    (length *list-of-left-wings*)
-                           :initial-contents *list-of-left-wings*))
+                           :initial-contents (reverse
+                                              (sort-list *list-of-left-wings*))))
   (setf (aref *position-array* 2) *left-wing-array*)
   (setf *right-wing-array2* (make-array
                             (length *list-of-right-wings*)
-                                    :initial-contents *list-of-right-wings*))
+                             :initial-contents (reverse
+                                                (sort-list *list-of-right-wings*))))
   (setf (aref *position-array* 3) *right-wing-array2*)
   (setf *left-wing-array2* (make-array 
                    (length *list-of-left-wings*)
-                           :initial-contents *list-of-left-wings*))
+                            :initial-contents (reverse
+                                               (sort-list *list-of-left-wings*))))
   (setf (aref *position-array* 4) *left-wing-array2*)
   (setf *center-array* (make-array
                         (length *list-of-centers*)
-                        :initial-contents *list-of-centers*))
+                        :initial-contents (reverse
+                                           (sort-list *list-of-centers*))))
   (setf (aref *position-array* 5) *center-array*)
   (setf *defenseman-array* (make-array
                                   (length *list-of-defensemen*)
-                                   :initial-contents *list-of-defensemen*))
+                            :initial-contents (reverse 
+                                              (sort-list *list-of-defensemen*))))
   (setf (aref *position-array* 6) *defenseman-array*)
   (setf *center-array2* (make-array
                         (length *list-of-centers*)
-                        :initial-contents *list-of-centers*))
+                         :initial-contents (reverse
+                                            (sort-list *list-of-centers*))))
   (setf (aref *position-array* 7) *center-array2*)
   (setf *defenseman-array2* (make-array
                                   (length *list-of-defensemen*)
-                                   :initial-contents *list-of-defensemen*))
+                             :initial-contents (reverse
+                                                (sort-list *list-of-defensemen*))))
   (setf (aref *position-array* 8) *defenseman-array2*)
   )
 
@@ -143,13 +149,16 @@
   (let* ((position (aref *position-array* position-x)))
     (loop
       for player across position
+      when (> (calculate-salary (cons player lineup))
+              *max-salary*) ; loop to next player
+      return (print "bonk")
       do (if (null (in-lineup-p lineup player))
              (progn 
             ;   (print player)
                (setf lineup (cons player lineup))
-            ;   (print lineup)
+            (print lineup)
                (cond
-                ((> (1+ position-x) 8) ; TERMINATOR done with all positions
+                ((> (1+ position-x) 3) ; TERMINATOR done with all positions
                  (if (and (> (calculate-score lineup) *best-score*) ; check score
                           (< (calculate-salary lineup) *max-salary*))
                      ; if best: append lineup, set best, cdr lineup, loop
@@ -163,16 +172,14 @@
                 ((< (calculate-salary lineup) *max-salary*) ; salary < max
                  (loop-recursive (1+ position-x) lineup) ; go recursively to next position
                  (setf lineup (cdr lineup))) ; remove player to loop to next
-                ((> (calculate-salary lineup) *max-salary*) ; loop to next player
-                 (setf lineup (cdr lineup))
-                 ) ; remove player added before going to next
+                ; return if salary is too high
                 (t (princ "."))) ; truth cond... do nothing
                )))
     lineup)) 
     
 ;;; TODO - add check score/append to not only find local max
 (copy-into-arrays)
-(defparameter *max-salary* 55000)
+(defparameter *max-salary* 27000)
 (defparameter *best-score* 0)
 (defparameter *legal-lineup* '())
 (loop-recursive 0 '())

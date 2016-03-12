@@ -193,7 +193,7 @@
 (setq full-file "C:/458Project/NHL-2016-03-08-14899-players-list.csv")
 (setq file-mini "C:/458Project/miniplayer.csv")
 
-(sort-player-classes-into-list-by-position file-in)
+(sort-player-classes-into-list-by-position file-mini)
 ;(sort-player-classes-into-list-by-position
  ;(loop with players = ()
   ;              for line in read-in
