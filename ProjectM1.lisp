@@ -36,9 +36,10 @@
 
 ;;; print player class ; from textbook
 (defmethod print-object ((object player) stream)
-  (format stream "#<PLAYER ~A (POSITION: ~A)>"
+  (format stream "#<PLAYER ~A (POSITION: ~A, SAL: ~A)>"
     (player-name object)
-    (player-position object)))
+    (player-position object)
+    (player-salary object)))
   
 ;
 ;;
@@ -190,8 +191,9 @@
 (setq file-in "C:/458Project/smallplayers.csv")
 (setq file-2 "C:/458Project/big2-29.csv")
 (setq full-file "C:/458Project/NHL-2016-03-08-14899-players-list.csv")
+(setq file-mini "C:/458Project/miniplayer.csv")
 
-(sort-player-classes-into-list-by-position full-file)
+(sort-player-classes-into-list-by-position file-in)
 ;(sort-player-classes-into-list-by-position
  ;(loop with players = ()
   ;              for line in read-in
