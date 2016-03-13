@@ -147,35 +147,40 @@
   (let* ((position (aref *position-array* position-x)))
     (loop
       for player across position
-      when (> (calculate-salary (cons player lineup))
-              *max-salary*) ; loop to next player
-      return lineup ;(progn
+    ;  when (> (calculate-salary (cons player lineup))
+   ;           *max-salary*) ; loop to next player
+  ;    return lineup ;(progn
             ;   (print (cons player lineup))
                 ;      (print "bonk"))
       do (if (null (in-lineup-p lineup player))
              (progn 
             ;   (print player)
                (setf lineup (cons player lineup))
+               (let ((line-salary (calculate-salary lineup))
+                     (line-score (calculate-score lineup)))
           ;  (print lineup)
                (cond
                 ((> (1+ position-x) 8) ; TERMINATOR done with all positions
-                 (if (and (> (calculate-score lineup) *best-score*) ; check score
-                          (< (calculate-salary lineup) *max-salary*))
+                 (if (and (> line-score *best-score*) ; check score
+                          (< line-salary *max-salary*))
                      ; if best: append lineup, set best, cdr lineup, loop
                      (progn (print "LEGAL LINEUP!!!!")
                        (setf *legal-lineup* (cons lineup *legal-lineup*))
-                       (setf *best-score* (calculate-score lineup))
+                       (setf *best-score* line-score)
                        (setf lineup (cdr lineup))
                        lineup ) ; return lineup from the progn
                    ;else remove player from list
                    (setf lineup (cdr lineup))))
-                ((< (calculate-salary lineup) *max-salary*) ; salary < max
+                ((< line-salary *max-salary*) ; salary < max
                  (loop-recursive (1+ position-x) lineup) ; go recursively to next position
+                 (setf lineup (cdr lineup))) ; remove player to loop to next
+                ((> line-salary *max-salary*) ; salary < max
+                 ;(loop-recursive (1+ position-x) lineup) ; go recursively to next position
                  (setf lineup (cdr lineup))) ; remove player to loop to next
                 ; return if salary is too high
                 (t (1+ 1))) ; truth cond... do nothing
-               )))
-    lineup)) 
+               ))))
+    lineup))
     
 ;;; TODO - add check score/append to not only find local max
 (copy-into-arrays)
