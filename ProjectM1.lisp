@@ -32,7 +32,13 @@
            :initarg :salary)
    (position :accessor player-position
              :initform 'x
-             :initarg :position)))
+             :initarg :position)
+   (played :accessor player-played
+           :initform 0
+           :initarg :played)
+   (injury :accessor player-injury
+           :initform 'blank
+           :initarg :injury)))
 
 ;;; print player class ; from textbook
 (defmethod print-object ((object player) stream)
@@ -98,12 +104,15 @@
   (let ((sam (MAKE-INSTANCE 'PLAYER)))  ;make instance
     (LOOP FOR ITEM IN LIst ; items in list
         FOR I upto 13     ; number of items "index"
-        do (cond ((= i 1) (setf (player-position sam) item))
-             ((= i 2) (setf (player-name sam) item))
-             ((= i 3) (setf (player-name sam) 
-                        (concatenate 'string (player-name sam) item)))
-             ((= i 4) (setf (player-score sam) (read-from-string item)))
-             ((= i 6) (setf (player-salary sam) (parse-integer item)))))
+        do (cond 
+            ((= i 1) (setf (player-position sam) item))
+            ((= i 2) (setf (player-name sam) item))
+            ((= i 3) (setf (player-name sam) 
+                       (concatenate 'string (player-name sam) item)))
+            ((= i 4) (setf (player-score sam) (read-from-string item)))
+            ((= i 5) (setf (player-played sam) (parse-integer item)))
+            ((= i 6) (setf (player-salary sam) (parse-integer item)))
+            ((= i 10) (setf (player-injury sam) item))))
     sam))
 
 ;
@@ -172,6 +181,10 @@
   (loop
     for player in player-class-list
     do (cond
+        ((< (player-played player) 20)
+         (print "bum"))
+        ((equal (player-injury player) "")
+         (print "not hurt"))
         ((equal (player-position player) "C")
          (setf *list-of-centers*
            (cons player *list-of-centers*)))

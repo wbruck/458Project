@@ -162,9 +162,9 @@
                (cond
                 ((> (1+ position-x) 8) ; TERMINATOR done with all positions
                  (if (and (> line-score *best-score*) ; check score
-                          (< line-salary *max-salary*))
+                          (< line-salary *max-salary*)) ; dont want too low
                      ; if best: append lineup, set best, cdr lineup, loop
-                     (progn (print "LEGAL LINEUP!!!!")
+                     (progn ;(print "LEGAL LINEUP!!!!")
                        (setf *legal-lineup* (cons lineup *legal-lineup*))
                        (setf *best-score* line-score)
                        (setf lineup (cdr lineup))
@@ -185,6 +185,7 @@
 ;;; TODO - add check score/append to not only find local max
 (copy-into-arrays)
 (defparameter *max-salary* 55000)
+(defparameter *soft-max* 45000)
 (defparameter *best-score* 0)
 (defparameter *legal-lineup* '())
 (time (loop-recursive 0 '()))
