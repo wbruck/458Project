@@ -175,16 +175,18 @@
 
 ;player-class-list is output of csv-into-loist-of-player-classes
 ; TODO - can probably add that into the function proper to make it easier
-(defun sort-player-classes-into-list-by-position (file-input)
+(defun sort-player-classes-into-list-by-position (file-input modulo-num)
   (let ((player-class-list (csv-into-list-of-player-classes file-input)))
   (load "C:/458Project/defPlayerLists.lisp")
   (loop
     for player in player-class-list
+    for i upto (length player-class-list)
+    when (equal (mod i 3) modulo-num)
     do (cond
         ((< (player-played player) 20)
-         (print "bum"))
-        ((equal (player-injury player) "")
-         (print "not hurt"))
+         (1+ 1))
+        ((string-not-equal (player-injury player) "")
+         (1+ 1))
         ((equal (player-position player) "C")
          (setf *list-of-centers*
            (cons player *list-of-centers*)))
@@ -203,13 +205,8 @@
 
 (setq file-in "C:/458Project/smallplayers.csv")
 (setq file-2 "C:/458Project/big2-29.csv")
-(setq full-file "C:/458Project/NHL-2016-03-08-14899-players-list.csv")
+(setq full-file "C:/458Project/NHL-2016-03-13-14949-players-list.csv")
 (setq file-mini "C:/458Project/miniplayer.csv")
 (setq med-file "C:/458Project/med-small.csv")
 
-(sort-player-classes-into-list-by-position med-file)
-;(sort-player-classes-into-list-by-position
- ;(loop with players = ()
-  ;              for line in read-in
-   ;                 do (cons (list-into-player-class (split-string-comma (line))) players)
-    ;                players)
+;(sort-player-classes-into-list-by-position full-file 2)

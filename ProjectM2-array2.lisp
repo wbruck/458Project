@@ -95,6 +95,9 @@
                              :initial-contents (reverse
                                                 (sort-list *list-of-defensemen*))))
   (setf (aref *position-array* 8) *defenseman-array2*)
+  (loop
+    for x across *position-array*
+    do (print (length x)))
   )
 
 
@@ -183,21 +186,36 @@
     lineup))
     
 ;;; TODO - add check score/append to not only find local max
-(copy-into-arrays)
+;(copy-into-arrays)
+(defparameter *legal-lineup* '())
 (defparameter *max-salary* 55000)
 (defparameter *soft-max* 45000)
-(defparameter *best-score* 0)
-(defparameter *legal-lineup* '())
-(time (loop-recursive 0 '()))
 
-;(SEARCH-FOR-LINEUP-A 0 0 'NIL) .
-(loop
-  for line in *legal-lineup*
-  do (print line))
-(loop
-  for line in *legal-lineup*
-  do (print (calculate-salary line)))
-(loop
-  for line in *legal-lineup*
-  do (print (calculate-score line)))
+(defun load-arrays (file mod-num)
+  (sort-player-classes-into-list-by-position file mod-num)
+  (copy-into-arrays)
+  (defparameter *best-score* 0))
+
+(defun load-run (file2 num)
+  (load-arrays file2 num)
+  (time (loop-recursive 0 '())))
+
+
+(defun loop-run ()
+  (loop
+    for q upto 2
+    do (print "STARTING....")
+    (print  q)
+    (load-run full-file q)))
+
+(loop-run)
+;(loop
+;  for line in *legal-lineup*
+;  do (print line))
+;(loop
+;  for line in *legal-lineup*
+;  do (print (calculate-salary line)))
+;(loop
+;  for line in *legal-lineup*
+;  do (print (calculate-score line)))
 
