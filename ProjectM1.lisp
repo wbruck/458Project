@@ -205,7 +205,7 @@
 
 (setq file-in "C:/458Project/smallplayers.csv")
 (setq file-2 "C:/458Project/big2-29.csv")
-(setq full-file "C:/458Project/NHL-2016-03-13-14949-players-list.csv")
+;(setq full-file "C:/458Project/NHL-2016-03-13-14949-players-list.csv")
 (setq file-mini "C:/458Project/miniplayer.csv")
 (setq med-file "C:/458Project/med-small.csv")
 
